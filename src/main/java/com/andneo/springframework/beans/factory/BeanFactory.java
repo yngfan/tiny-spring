@@ -15,7 +15,7 @@ public interface BeanFactory {
 
     Object getBean(String beanName, Object... args) throws BeansException;
     // 按照类型获取bean
-    <T> T getBeansOfType(Class<T> requiredType) throws BeansException;
+    <T> T getBean(String beanName, Class<T> requiredType) throws BeansException;
 
 
 }

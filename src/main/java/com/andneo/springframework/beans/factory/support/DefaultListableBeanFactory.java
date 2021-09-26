@@ -1,7 +1,9 @@
 package com.andneo.springframework.beans.factory.support;
 
 import com.andneo.springframework.beans.BeansException;
+import com.andneo.springframework.beans.factory.ConfigurableListableBeanFactory;
 import com.andneo.springframework.beans.factory.config.BeanDefinition;
+import com.andneo.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +15,7 @@ import java.util.Map;
  * @author: fanfan.yang
  * @create: 2021-09-23 17:47
  **/
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ConfigurableListableBeanFactory {
 
     private Map<String, BeanDefinition> beanDefinitionMap = new HashMap<String, BeanDefinition>();
 
@@ -35,7 +37,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         return beanDefinitionMap.keySet().toArray(new String[0]);
     }
 
-    public <T> T getBeansOfType(Class<T> type) throws BeansException {
+    public void preInstantiateSingletons() throws BeansException {
+        beanDefinitionMap.keySet().forEach(this::getBean);
+    }
+
+    @Override
+    public <T> Map<String, T> getBeanOfType(Class<T> type) {
         Map<String, T> result = new HashMap();
         beanDefinitionMap.forEach((beanName, beanDefinition) -> {
             Class beanClass = beanDefinition.getBeanClass();
@@ -43,6 +50,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
                 result.put(beanName, (T) getBean(beanName));
             }
         });
-        return (T) result;
+        return result;
     }
 }
