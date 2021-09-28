@@ -12,13 +12,47 @@ public class UserService {
 
     private UserDao userDao;
 
-//    public UserService(String name) {
-//        this.name = name;
-//    }
+    private String company;
 
-    public void queryUserInfo() {
+    private String location;
 
-        String s = this.userDao.queryUserName(uid);
-        System.out.println("查询用户信息 -> " + s);
+    public String queryUserInfo() {
+
+//        String s = this.userDao.queryUserName(uid);
+//        System.out.println("查询用户信息 -> " + s);
+
+        return userDao.queryUserName(uid) + "," + company + "," + location;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

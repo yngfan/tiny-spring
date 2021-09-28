@@ -4,8 +4,12 @@
     <bean id="userService" class="com.andneo.springframework.test.bean.UserService">
         <property name="uid" value="001"/>
         <property name="userDao" ref="userDao"/>
+        <property name="company" value="腾讯"/>
+        <property name="location" value="深圳"/>
     </bean>
 
     <bean id="userDao" class="com.andneo.springframework.test.bean.UserDao"/>
 
+    <bean class="com.andneo.springframework.test.common.MyBeanFactoryPostProcessor"/>
+    <bean class="com.andneo.springframework.test.common.MyBeanPostProcessor"/>
 </beans>

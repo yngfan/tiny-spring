@@ -15,12 +15,12 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 
     @Override
     protected void refreshBeanFactory() {
+        // 实例化
         DefaultListableBeanFactory beanFactory = createBeanFactory();
+        // 加载beanDefinition
         loadBeanDefinitions(beanFactory);
         this.beanFactory = beanFactory;
     }
-
-    protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory);
 
     private DefaultListableBeanFactory createBeanFactory() {
         return new DefaultListableBeanFactory();
@@ -30,5 +30,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
     protected ConfigurableListableBeanFactory getBeanFactory() {
         return beanFactory;
     }
+
+
+    protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory);
 
 }

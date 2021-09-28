@@ -6,6 +6,7 @@ import com.andneo.springframework.beans.factory.config.BeanDefinition;
 import com.andneo.springframework.beans.factory.config.BeanReference;
 import com.andneo.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.andneo.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import com.andneo.springframework.context.support.ClassPathXmlApplicationContext;
 import com.andneo.springframework.core.io.DefaultResourceLoader;
 import com.andneo.springframework.test.bean.UserService;
 
@@ -22,7 +23,16 @@ public class ApiTest {
 
 //        run05();
 
-        runXML();
+//        runXML();
+        // applicationContext
+        runApplicationContext();
+    }
+
+    private static void runApplicationContext() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        UserService userService = (UserService) applicationContext.getBean("userService");
+        String s = userService.queryUserInfo();
+        System.out.println("测试结果" + s);
     }
 
     private static void runXML() {
