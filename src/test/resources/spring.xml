@@ -8,7 +8,7 @@
         <property name="location" value="深圳"/>
     </bean>
 
-    <bean id="userDao" class="com.andneo.springframework.test.bean.UserDao"/>
+    <bean id="userDao" class="com.andneo.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod"/>
 
     <bean class="com.andneo.springframework.test.common.MyBeanFactoryPostProcessor"/>
     <bean class="com.andneo.springframework.test.common.MyBeanPostProcessor"/>

@@ -1,5 +1,7 @@
 package com.andneo.springframework.context;
 
+import com.andneo.springframework.beans.BeansException;
+
 /**
  * @program: tiny-spring
  * @description:
@@ -8,5 +10,9 @@ package com.andneo.springframework.context;
  **/
 public interface ConfigurableApplicationContext extends ApplicationContext {
     // 刷新容器
-    void refresh();
+    void refresh() throws BeansException;
+
+    void registerShutdownHook();
+
+    void close();
 }
