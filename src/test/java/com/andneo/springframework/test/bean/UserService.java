@@ -13,27 +13,38 @@ public class UserService implements InitializingBean, DisposableBean {
 
     private String uid;
 
-    private UserDao userDao;
+//    private UserDao userDao;
 
     private String company;
 
     private String location;
+
+    private IUserDao userDao;
 
     public String queryUserInfo() {
 
 //        String s = this.userDao.queryUserName(uid);
 //        System.out.println("查询用户信息 -> " + s);
 
+//        return userDao.queryUserName(uid) + "," + company + "," + location;
+
         return userDao.queryUserName(uid) + "," + company + "," + location;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("执行：UserService.destroy");
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("执行：UserService.afterPropertiesSet");
     }
 
     public String getUid() {
         return uid;
     }
 
-    public UserDao getUserDao() {
-        return userDao;
-    }
 
     public String getCompany() {
         return company;
@@ -47,10 +58,6 @@ public class UserService implements InitializingBean, DisposableBean {
         this.uid = uid;
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
     public void setCompany(String company) {
         this.company = company;
     }
@@ -59,14 +66,5 @@ public class UserService implements InitializingBean, DisposableBean {
         this.location = location;
     }
 
-    @Override
-    public void destroy() throws Exception {
-        System.out.println("执行：UserService.destroy");
-    }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        System.out.println("执行：UserService.afterPropertiesSet");
-
-    }
 }

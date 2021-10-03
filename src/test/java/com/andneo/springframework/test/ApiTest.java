@@ -9,6 +9,7 @@ import com.andneo.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import com.andneo.springframework.context.support.ClassPathXmlApplicationContext;
 import com.andneo.springframework.core.io.DefaultResourceLoader;
 import com.andneo.springframework.test.bean.UserService;
+import org.junit.Test;
 
 /**
  * @program: tiny-spring
@@ -19,6 +20,7 @@ import com.andneo.springframework.test.bean.UserService;
 
 public class ApiTest {
 
+//    @Test
     public static void main(String[] args) {
 
 //        run05();
@@ -27,7 +29,31 @@ public class ApiTest {
         // applicationContext
 //        runApplicationContext();
 
-        runShutDownHook();
+//        runShutDownHook();
+
+        runPrototype();
+    }
+
+    private static void runPrototype() {
+
+        // 1.初始化 BeanFactory
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
+        // 2. 获取Bean对象调用方法
+        UserService userService01 = applicationContext.getBean("userService", UserService.class);
+        UserService userService02 = applicationContext.getBean("userService", UserService.class);
+
+        String result = userService01.queryUserInfo();
+        System.out.println("测试结果：" + result);
+
+        // 3. 配置 scope="prototype/singleton"
+        System.out.println(userService01);
+        System.out.println(userService02);
+
+        // 4. 打印十六进制哈希
+        System.out.println(userService01 + " 十六进制哈希：" + Integer.toHexString(userService01.hashCode()));
+//        System.out.println(ClassLayout.parseInstance(userService01).toPrintable());
     }
 
     private static void runShutDownHook() {
