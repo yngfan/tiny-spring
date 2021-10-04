@@ -1,15 +1,22 @@
 package com.andneo.springframework.test;
 
-import com.andneo.springframework.beans.PropertyValue;
-import com.andneo.springframework.beans.PropertyValues;
-import com.andneo.springframework.beans.factory.config.BeanDefinition;
-import com.andneo.springframework.beans.factory.config.BeanReference;
+import com.andneo.springframework.aop.AdvisedSupport;
+import com.andneo.springframework.aop.TargetSource;
+import com.andneo.springframework.aop.aspectj.AspectJExpressionPointCut;
+import com.andneo.springframework.aop.framework.Cglib2AopProxy;
+import com.andneo.springframework.aop.framework.JdkDynamicAopProxy;
 import com.andneo.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.andneo.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import com.andneo.springframework.context.support.ClassPathXmlApplicationContext;
 import com.andneo.springframework.core.io.DefaultResourceLoader;
+import com.andneo.springframework.test.bean.IUserService;
 import com.andneo.springframework.test.bean.UserService;
-import org.junit.Test;
+import com.andneo.springframework.test.bean.UserService2;
+import com.andneo.springframework.test.bean.UserServiceInterceptor;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * @program: tiny-spring
@@ -31,7 +38,58 @@ public class ApiTest {
 
 //        runShutDownHook();
 
-        runPrototype();
+//        runPrototype();
+
+//        testProxyMethod();
+
+//        testAOP();
+
+        testDynamic();
+    }
+
+    private static void testDynamic() {
+        UserService userService = new UserService();
+
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+        advisedSupport.setMethodInterceptor(new UserServiceInterceptor());
+        advisedSupport.setMethodMatcher(new AspectJExpressionPointCut("execution(* com.andneo.springframework.test.bean.IUserService.*(..))"));
+        advisedSupport.setTargetSource(new TargetSource(userService));
+
+        IUserService jdkProxy = (IUserService) new JdkDynamicAopProxy(advisedSupport).getProxy();
+        System.out.println("测试结果：" + jdkProxy.queryUserInfo());
+
+
+        IUserService cgligProxy = (IUserService) new Cglib2AopProxy(advisedSupport).getProxy();
+        System.out.println("测试结果：" + cgligProxy.register("花花"));
+
+
+    }
+
+    private static void testAOP() {
+        AspectJExpressionPointCut pointCut = new AspectJExpressionPointCut("execution(* com.andneo.springframework.test.bean.UserService.*(..))");
+        Class<UserService2> clazz = UserService2.class;
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod("queryUserInfo");
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        boolean matches = pointCut.matches(clazz);
+        boolean matches1 = pointCut.matches(method, clazz);
+        System.out.println("matches " + matches);
+        System.out.println("matches1 " + matches1);
+    }
+
+    private static void testProxyMethod() {
+        Object targetObj = new UserService2();
+        Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), targetObj.getClass().getInterfaces(), new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+                return null;
+            }
+        });
+
     }
 
     private static void runPrototype() {
@@ -41,8 +99,8 @@ public class ApiTest {
         applicationContext.registerShutdownHook();
 
         // 2. 获取Bean对象调用方法
-        UserService userService01 = applicationContext.getBean("userService", UserService.class);
-        UserService userService02 = applicationContext.getBean("userService", UserService.class);
+        UserService2 userService01 = applicationContext.getBean("userService", UserService2.class);
+        UserService2 userService02 = applicationContext.getBean("userService", UserService2.class);
 
         String result = userService01.queryUserInfo();
         System.out.println("测试结果：" + result);
@@ -62,14 +120,14 @@ public class ApiTest {
         applicationContext.registerShutdownHook();
 
         // 2. 获取Bean对象调用方法
-        UserService userService = applicationContext.getBean("userService", UserService.class);
+        UserService2 userService = applicationContext.getBean("userService", UserService2.class);
         String result = userService.queryUserInfo();
         System.out.println("测试结果：" + result);
     }
 
     private static void runApplicationContext() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
-        UserService userService = (UserService) applicationContext.getBean("userService");
+        UserService2 userService = (UserService2) applicationContext.getBean("userService");
         String s = userService.queryUserInfo();
         System.out.println("测试结果" + s);
     }
@@ -82,7 +140,7 @@ public class ApiTest {
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions("classpath:spring.xml");
 
-        UserService userService = (UserService) beanFactory.getBean("userService", UserService.class);
+        UserService2 userService = (UserService2) beanFactory.getBean("userService", UserService2.class);
         userService.queryUserInfo();
 
     }

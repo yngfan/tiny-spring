@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
-    <bean id="userService" class="com.andneo.springframework.test.bean.UserService" scope="singleton">
+    <bean id="userService" class="com.andneo.springframework.test.bean.UserService2" scope="singleton">
         <property name="uid" value="001"/>
 
         <property name="company" value="腾讯"/>
