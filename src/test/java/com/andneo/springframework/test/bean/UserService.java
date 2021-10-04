@@ -1,70 +1,34 @@
 package com.andneo.springframework.test.bean;
 
-import com.andneo.springframework.beans.factory.DisposableBean;
-import com.andneo.springframework.beans.factory.InitializingBean;
+import java.util.Random;
 
 /**
  * @program: tiny-spring
- * @description: UserService
+ * @description:
  * @author: fanfan.yang
- * @create: 2021-09-23 18:57
+ * @create: 2021-10-04 16:55
  **/
-public class UserService implements InitializingBean, DisposableBean {
+public class UserService implements IUserService {
 
-    private String uid;
 
-//    private UserDao userDao;
-
-    private String company;
-
-    private String location;
-
-    private IUserDao userDao;
-
+    @Override
     public String queryUserInfo() {
-
-//        String s = this.userDao.queryUserName(uid);
-//        System.out.println("查询用户信息 -> " + s);
-
-//        return userDao.queryUserName(uid) + "," + company + "," + location;
-
-        return userDao.queryUserName(uid) + "," + company + "," + location;
+        try {
+            Thread.sleep(new Random(1).nextInt(100));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "小傅哥，100001，深圳";
     }
 
     @Override
-    public void destroy() throws Exception {
-        System.out.println("执行：UserService.destroy");
+    public String register(String userName) {
+        try {
+            Thread.sleep(new Random(1).nextInt(100));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "注册用户：" + userName + " success！";
     }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        System.out.println("执行：UserService.afterPropertiesSet");
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
 
 }
