@@ -47,6 +47,7 @@ public class Cglib2AopProxy implements AopProxy {
             }
             return methodInvocation.proceed();
         }
+
     }
 
     private static class CglibMethodInvocation extends ReflectiveMethodInvocation {
